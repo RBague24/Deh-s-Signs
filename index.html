@@ -629,10 +629,16 @@
               <label>Quantity</label>
               <select id="req-qty" onchange="updateEstimate()">
                 <option value="">— How many? —</option>
-                <option value="1">1–5 pieces</option>
-                <option value="6">6–25 pieces</option>
-                <option value="26">26–100 pieces</option>
-                <option value="100">100+ pieces</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
               </select>
             </div>
           </div>
@@ -766,7 +772,7 @@
     <div class="footer-links">
       <h4>Contact</h4>
       <a href="#contact">Send a Request</a>
-      <a href="mailto:hello@dehsigns.com">hello@dehsigns.com</a>
+      <a href="mailto:rbague437@gmail.com">hello@dehsigns.com</a>
     </div>
     <div class="footer-links">
       <h4>Follow Us</h4>
@@ -805,10 +811,6 @@ const PRICES = {
   other:   { name: 'Custom Item',       base: null, bulkAt: null, bulk: null },
 };
 
-// Mid-point qty for each range bracket
-const QTY_MID = { '1': 3, '6': 15, '26': 60, '100': 120 };
-const QTY_LABELS = { '1': '1–5', '6': '6–25', '26': '26–100', '100': '100+' };
-
 // ── Cash App cashtag — REPLACE WITH THE CLIENT'S ACTUAL $CASHTAG ──
 const CASHTAG = '$DehSigns';
 
@@ -831,8 +833,8 @@ function updateEstimate() {
   }
 
   const p   = PRICES[productKey];
-  const qty = QTY_MID[qtyKey];
-  const qtyLabel = QTY_LABELS[qtyKey];
+  const qty = parseInt(qtyKey);
+  const qtyLabel = `${qty} piece${qty !== 1 ? 's' : ''}`;
 
   estimator.style.display = 'block';
 
@@ -946,12 +948,53 @@ function submitRequest() {
   const name    = document.getElementById('req-name').value.trim();
   const email   = document.getElementById('req-email').value.trim();
   const product = document.getElementById('req-product').value;
+  const qty     = document.getElementById('req-qty').value;
   const desc    = document.getElementById('req-desc').value.trim();
   if (!name || !email || !product || !desc) { showToast('Please fill in all required fields.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email.'); return; }
-  document.getElementById('contact-form-body').style.display = 'none';
-  document.getElementById('form-success').classList.add('show');
-  showToast("Order submitted! We'll be in touch.");
+
+  const productName = PRICES[product] ? PRICES[product].name : 'Custom Item';
+  const qtyLabel    = qty ? `${qty} piece${parseInt(qty) !== 1 ? 's' : ''}` : 'N/A';
+  const totalLabel  = currentTotal > 0 ? `$${currentTotal.toFixed(2)}` : 'Quote on request';
+  const payStatus   = paymentConfirmed ? 'YES — client confirmed Cash App payment sent' : 'Quote only (no payment required)';
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const formData = new FormData();
+  formData.append('_subject',         `New Merch Order from ${name}`);
+  formData.append('_template',        'table');
+  formData.append('_captcha',         'false');
+  formData.append('Name',             name);
+  formData.append('Email',            email);
+  formData.append('Product Type',     productName);
+  formData.append('Quantity',         qtyLabel);
+  formData.append('Estimated Total',  totalLabel);
+  formData.append('Cash App Paid',    payStatus);
+  formData.append('Project Details',  desc);
+
+  // ── REPLACE hello@dehsigns.com WITH THE CLIENT'S REAL EMAIL ──
+  fetch('https://formsubmit.co/ajax/rbague437@gmail.com', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success === 'true' || data.success === true) {
+      document.getElementById('contact-form-body').style.display = 'none';
+      document.getElementById('form-success').classList.add('show');
+      showToast("Order submitted! We'll be in touch.");
+    } else {
+      throw new Error('FormSubmit returned failure');
+    }
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.textContent = 'Submit My Order';
+    showToast('Something went wrong. Please try again or email us directly.');
+  });
 }
 
 function resetForm() {
