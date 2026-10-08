@@ -249,13 +249,57 @@
     .upload-thumb-wrap { position:relative; }
     .upload-thumb { width:58px; height:58px; border-radius:8px; object-fit:cover; border:2px solid var(--blush); }
     .upload-remove { position:absolute; top:-5px; right:-5px; width:16px; height:16px; background:var(--pink); color:white; border:none; border-radius:50%; font-size:.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    /* ── PRICE ESTIMATOR ── */
+    .price-estimator {
+      background:linear-gradient(135deg,rgba(26,58,107,.06),rgba(232,65,122,.06));
+      border:1.5px solid rgba(74,144,217,.2); border-radius:var(--radius);
+      padding:1.1rem 1.25rem; margin-bottom:1rem;
+    }
+    .price-estimator-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:.75rem; }
+    .price-estimator-label { font-size:.75rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--navy); }
+    .price-display { font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; color:var(--pink); transition:all .3s; }
+    .price-breakdown { font-size:.75rem; color:var(--muted); line-height:1.6; }
+    .price-breakdown span { display:block; }
+    .price-note { font-size:.7rem; color:var(--muted); margin-top:.5rem; font-style:italic; }
+
+    /* ── PAYMENT FLOW ── */
+    .pay-now-row { margin-top:1rem; }
+    .btn-pay-now {
+      width:100%; background:linear-gradient(135deg,#00c244,#00a035);
+      color:white; border:none; padding:.95rem 1.5rem; border-radius:50px;
+      font-family:'DM Sans',sans-serif; font-weight:700; font-size:1rem;
+      cursor:pointer; transition:opacity .2s,transform .2s,box-shadow .2s;
+      display:flex; align-items:center; justify-content:center; gap:.6rem;
+    }
+    .btn-pay-now:hover { opacity:.92; transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,160,53,.3); }
+    .btn-pay-now:disabled { background:#c0c0c0; cursor:not-allowed; transform:none; box-shadow:none; opacity:.7; }
+    .cashapp-icon { width:22px; height:22px; flex-shrink:0; }
+
+    .pay-step { display:none; }
+    .pay-step.active { display:block; }
+
+    /* Step 2 — confirm sent */
+    .confirm-sent-box {
+      background:linear-gradient(135deg,rgba(0,194,68,.08),rgba(0,160,53,.05));
+      border:1.5px solid rgba(0,194,68,.3); border-radius:var(--radius);
+      padding:1.25rem; margin-top:.9rem; text-align:center;
+    }
+    .confirm-sent-box p { font-size:.88rem; color:var(--navy); font-weight:500; margin-bottom:1rem; line-height:1.5; }
+    .confirm-sent-box .amount-reminder { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; color:#00a035; display:block; margin-bottom:.4rem; }
+    .confirm-sent-btn-row { display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; }
+    .btn-confirm-yes { background:linear-gradient(135deg,#00c244,#00a035); color:white; border:none; padding:.7rem 1.5rem; border-radius:50px; font-weight:700; font-size:.88rem; cursor:pointer; transition:opacity .2s,transform .2s; }
+    .btn-confirm-yes:hover { opacity:.88; transform:translateY(-1px); }
+    .btn-reopen-cash { background:transparent; color:var(--navy); border:1.5px solid rgba(26,58,107,.25); padding:.7rem 1.2rem; border-radius:50px; font-weight:600; font-size:.82rem; cursor:pointer; transition:border-color .2s; }
+    .btn-reopen-cash:hover { border-color:var(--pink); color:var(--pink); }
+
     .form-submit-row { display:flex; align-items:center; gap:1rem; margin-top:1.25rem; flex-wrap:wrap; }
     .btn-submit { background:linear-gradient(135deg,var(--pink),#c93268); color:var(--white); border:none; padding:.88rem 2.25rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:.95rem; cursor:pointer; transition:opacity .2s,transform .2s,box-shadow .2s; }
-    .btn-submit:hover { opacity:.9; transform:translateY(-2px); box-shadow:0 8px 22px rgba(232,65,122,.32); }
+    .btn-submit:hover:not(:disabled) { opacity:.9; transform:translateY(-2px); box-shadow:0 8px 22px rgba(232,65,122,.32); }
+    .btn-submit:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
     .form-note { font-size:.75rem; color:var(--muted); }
     .form-success { display:none; text-align:center; padding:2rem 1rem; }
     .form-success.show { display:block; }
-    .form-success-check { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--blue),var(--navy)); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+    .form-success-check { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#00c244,#00a035); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
     .form-success-check svg { width:26px; height:26px; stroke:white; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
     .form-success h4 { font-family:'Syne',sans-serif; font-weight:800; color:var(--navy); font-size:1.15rem; margin-bottom:.5rem; }
     .form-success p  { color:var(--muted); font-size:.88rem; }
@@ -412,17 +456,17 @@
     <div class="project-card reveal">
       <div class="project-img bg-c1">
         <div class="project-img-placeholder">
-          <div class="pip-code">T-Shirt</div>
-          <div class="pip-label">Videos of your t-shirt designs go here</div>
+          <div class="pip-code">TEE</div>
+          <div class="pip-label">Custom T-Shirt</div>
         </div>
         <div class="project-category-tag">Apparel</div>
       </div>
       <div class="project-info">
-        <div class="project-name">T-Shirt</div>
-        <div class="project-desc">Get whatever kind of t-shirt design you may want! We offer a range of styles and colors to suit your needs.</div>
+        <div class="project-name">Logo Tee — Local Business</div>
+        <div class="project-desc">100% cotton tee with a custom screen-printed logo for a local restaurant. Ordered in bulk for staff uniforms.</div>
         <div class="project-footer">
-          <span class="project-type-label">Press on</span>
-          <a href="#contact" class="btn-inquire">Customize your own</a>
+          <span class="project-type-label">Screen Print</span>
+          <a href="#contact" class="btn-inquire">Get This</a>
         </div>
       </div>
     </div>
@@ -430,17 +474,17 @@
     <div class="project-card reveal">
       <div class="project-img bg-c2">
         <div class="project-img-placeholder">
-          <div class="pip-code">Hoodie</div>
-          <div class="pip-label">Videos of your hoodie designs go here</div>
+          <div class="pip-code">HOOD</div>
+          <div class="pip-label">Custom Hoodie</div>
         </div>
         <div class="project-category-tag">Apparel</div>
       </div>
       <div class="project-info">
         <div class="project-name">Zip-Up Hoodie — Sports Team</div>
-        <div class="project-desc">Get whatever kind of hoodie or jacket design you may want! We offer a range of styles and colors to suit your needs.</div>
+        <div class="project-desc">Premium fleece zip hoodie with embroidered team logo on chest and player number on the back.</div>
         <div class="project-footer">
           <span class="project-type-label">Embroidery</span>
-          <a href="#contact" class="btn-inquire">Customize your own</a>
+          <a href="#contact" class="btn-inquire">Get This</a>
         </div>
       </div>
     </div>
@@ -448,17 +492,17 @@
     <div class="project-card reveal">
       <div class="project-img bg-c4">
         <div class="project-img-placeholder">
-          <div class="pip-code">Canvas</div>
-          <div class="pip-label">Videos of your canvas artwork designs go here</div>
+          <div class="pip-code">CAP</div>
+          <div class="pip-label">Snapback Cap</div>
         </div>
-        <div class="project-category-tag">Home Decor</div>
+        <div class="project-category-tag">Headwear</div>
       </div>
       <div class="project-info">
-        <div class="project-name">Canvas Artwork</div>
-        <div class="project-desc">Get whatever kind of canvas artwork design you may want! We offer a range of styles and colors to suit your needs.</div>
+        <div class="project-name">Snapback Cap — Brand Launch</div>
+        <div class="project-desc">Structured snapback with a 3D puff embroidered logo. Made for a streetwear brand's debut drop.</div>
         <div class="project-footer">
-          <span class="project-type-label">Artwork</span>
-          <a href="#contact" class="btn-inquire">Customize your own</a>
+          <span class="project-type-label">3D Puff Embroidery</span>
+          <a href="#contact" class="btn-inquire">Get This</a>
         </div>
       </div>
     </div>
@@ -466,17 +510,17 @@
     <div class="project-card reveal">
       <div class="project-img bg-c3">
         <div class="project-img-placeholder">
-          <div class="pip-code">Other</div>
-          <div class="pip-label">Videos of other product designs go here</div>
+          <div class="pip-code">TOT</div>
+          <div class="pip-label">Canvas Tote</div>
         </div>
-        <div class="project-category-tag">Other</div>
+        <div class="project-category-tag">Bags</div>
       </div>
       <div class="project-info">
-        <div class="project-name">Other</div>
-        <div class="project-desc">Get whatever kind of product design you may want! We offer a range of styles and colors to suit your needs.</div>
+        <div class="project-name">Canvas Tote — Pop-Up Shop</div>
+        <div class="project-desc">Natural canvas tote with a bold one-color print. Used as branded merch for an artist's pop-up event.</div>
         <div class="project-footer">
-          <span class="project-type-label">Design</span>
-          <a href="#contact" class="btn-inquire">Customize your own</a>
+          <span class="project-type-label">Screen Print</span>
+          <a href="#contact" class="btn-inquire">Get This</a>
         </div>
       </div>
     </div>
@@ -484,17 +528,17 @@
     <div class="project-card reveal">
       <div class="project-img bg-c5">
         <div class="project-img-placeholder">
-          <div class="pip-code">Other</div>
-          <div class="pip-label">Videos of other product designs go here</div>
+          <div class="pip-code">MUG</div>
+          <div class="pip-label">Ceramic Mug</div>
         </div>
-        <div class="project-category-tag">Other</div>
+        <div class="project-category-tag">Drinkware</div>
       </div>
       <div class="project-info">
-        <div class="project-name">Other</div>
-        <div class="project-desc">Get whatever kind of product design you may want! We offer a range of styles and colors to suit your needs.</div>
+        <div class="project-name">Custom Mug — Corporate Gift</div>
+        <div class="project-desc">Dishwasher-safe 11oz ceramic mug with full-color wrap print. Ordered as holiday gifts for a company's clients.</div>
         <div class="project-footer">
-          <span class="project-type-label">Design</span>
-          <a href="#contact" class="btn-inquire">Customize your own</a>
+          <span class="project-type-label">Dye Sublimation</span>
+          <a href="#contact" class="btn-inquire">Get This</a>
         </div>
       </div>
     </div>
@@ -502,17 +546,17 @@
     <div class="project-card reveal">
       <div class="project-img bg-c6">
         <div class="project-img-placeholder">
-          <div class="pip-code">Other</div>
-          <div class="pip-label">Videos of other product designs go here</div>
+          <div class="pip-code">PIN</div>
+          <div class="pip-label">Enamel Pin</div>
         </div>
-        <div class="project-category-tag">Other</div>
+        <div class="project-category-tag">Accessories</div>
       </div>
       <div class="project-info">
-        <div class="project-name">Other</div>
-        <div class="project-desc">Get whatever kind of product design you may want! We offer a range of styles and colors to suit your needs.</div>
+        <div class="project-name">Enamel Pin Set — Convention</div>
+        <div class="project-desc">Hard enamel pins based on a creator's character designs. Sold as collectibles at an anime convention.</div>
         <div class="project-footer">
-          <span class="project-type-label">Design</span>
-          <a href="#contact" class="btn-inquire">Customize your own</a>
+          <span class="project-type-label">Hard Enamel</span>
+          <a href="#contact" class="btn-inquire">Get This</a>
         </div>
       </div>
     </div>
@@ -568,24 +612,41 @@
           <div class="form-row">
             <div class="rfield">
               <label>Product Type</label>
-              <select id="req-product">
+              <select id="req-product" onchange="updateEstimate()">
                 <option value="">— What do you need? —</option>
-                <option>Short-sleeve T-Shirt</option><option>Long-sleeve T-Shirt</option>
-                <option>Sweatshirt</option><option>Hoodie</option>
-                <option>Jacket</option><option>Canvas</option>
-                <option>3D Printed Design - Coming Soon</option><option>Home Decor - Coming Soon</option>
-                <option>Other / Not sure yet</option>
+                <option value="tshirt">T-Shirt</option>
+                <option value="hoodie">Hoodie / Sweatshirt</option>
+                <option value="hat">Hat / Cap</option>
+                <option value="tote">Tote Bag</option>
+                <option value="mug">Mug / Drinkware</option>
+                <option value="jacket">Jacket</option>
+                <option value="pin">Enamel Pin</option>
+                <option value="other">Something I saw on the site</option>
+                <option value="other">Other / Not sure yet</option>
               </select>
             </div>
             <div class="rfield">
-              <label>Estimated Quantity</label>
-              <select id="req-qty">
+              <label>Quantity</label>
+              <select id="req-qty" onchange="updateEstimate()">
                 <option value="">— How many? —</option>
-                <option>1–5</option><option>6–25</option>
-                <option>26–100</option><option>100+</option>
+                <option value="1">1–5 pieces</option>
+                <option value="6">6–25 pieces</option>
+                <option value="26">26–100 pieces</option>
+                <option value="100">100+ pieces</option>
               </select>
             </div>
           </div>
+
+          <!-- PRICE ESTIMATOR -->
+          <div class="price-estimator" id="price-estimator" style="display:none;">
+            <div class="price-estimator-header">
+              <span class="price-estimator-label">Estimated Total</span>
+              <span class="price-display" id="price-display">$0.00</span>
+            </div>
+            <div class="price-breakdown" id="price-breakdown"></div>
+            <p class="price-note">* Estimate based on standard pricing. Final quote sent after review.</p>
+          </div>
+
           <div class="form-row single">
             <div class="rfield">
               <label>Tell Us About Your Project</label>
@@ -601,18 +662,46 @@
               <div class="upload-preview" id="upload-preview"></div>
             </div>
           </div>
-          <div class="form-submit-row">
-            <button class="btn-submit" onclick="submitRequest()">Send My Request</button>
-            <span class="form-note">We'll reply within 1 business day.</span>
+
+          <!-- STEP 1: Pay Now button (shown once product + qty selected) -->
+          <div class="pay-now-row" id="pay-step-1" style="display:none;">
+            <button class="btn-pay-now" id="btn-pay-now" onclick="openCashApp()">
+              <svg class="cashapp-icon" viewBox="0 0 24 24" fill="none">
+                <rect width="24" height="24" rx="6" fill="#00C244"/>
+                <path d="M15.5 8.5c-.4-.9-1.4-1.5-2.5-1.5h-2c-1.4 0-2.5 1.1-2.5 2.5 0 1.2.8 2.2 2 2.4l2 .4c.6.1 1 .6 1 1.2 0 .7-.6 1.2-1.3 1.2h-2c-.6 0-1.1-.3-1.4-.8" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                <line x1="12" y1="6" x2="12" y2="7.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                <line x1="12" y1="16.5" x2="12" y2="18" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              Pay Now via Cash App — <span id="pay-btn-amount">$0.00</span>
+            </button>
+            <p style="font-size:.72rem;color:var(--muted);margin-top:.5rem;text-align:center;">You'll be taken to Cash App with the amount prefilled. Come back here after sending.</p>
+          </div>
+
+          <!-- STEP 2: Confirm payment sent (unlocks after Pay Now clicked) -->
+          <div class="pay-step" id="pay-step-2">
+            <div class="confirm-sent-box">
+              <span class="amount-reminder" id="confirm-amount">$0.00</span>
+              <p>Did you send the payment on Cash App? Once confirmed, your order request will be submitted to us.</p>
+              <div class="confirm-sent-btn-row">
+                <button class="btn-confirm-yes" onclick="confirmPayment()">Yes, I sent it ✓</button>
+                <button class="btn-reopen-cash" onclick="reopenCashApp()">Open Cash App Again</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: Submit (only enabled after payment confirmed) -->
+          <div class="form-submit-row" id="submit-row" style="display:none;">
+            <button class="btn-submit" id="btn-submit" onclick="submitRequest()" disabled>Submit My Order</button>
+            <span class="form-note" id="submit-note">Confirm your Cash App payment above to unlock.</span>
           </div>
         </div>
         <div class="form-success" id="form-success">
           <div class="form-success-check">
             <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h4>Request Sent!</h4>
-          <p>We've got your message and will follow up within 1 business day.</p>
-          <button class="btn-primary" style="margin-top:1.25rem;" onclick="resetForm()">Send Another Request</button>
+          <h4>Order Received!</h4>
+          <p>Payment confirmed. We'll review your order and reach out within 1 business day to get everything started.</p>
+          <button class="btn-primary" style="margin-top:1.25rem;" onclick="resetForm()">Place Another Order</button>
         </div>
       </div>
     </div>
@@ -687,7 +776,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Deh' Signs <span class="footer-dot">·</span> All rights reserved</span>
+    <span>© 2025 Deh' Signs <span class="footer-dot">·</span> All rights reserved</span>
     <span style="color:var(--blush);font-weight:600;">Se Habla Español</span>
   </div>
 </footer>
@@ -700,6 +789,134 @@
 </div>
 
 <script>
+/* ══════════════════════════════════════════════════════════
+   PRICING TABLE
+   key = product select value, value = [base unit price, bulk threshold, bulk unit price]
+   Bulk tier kicks in at qty >= threshold
+══════════════════════════════════════════════════════════ */
+const PRICES = {
+  tshirt:  { name: 'T-Shirt',           base: 25,  bulkAt: 6,   bulk: 20  },
+  hoodie:  { name: 'Hoodie/Sweatshirt', base: 45,  bulkAt: 6,   bulk: 38  },
+  hat:     { name: 'Hat / Cap',         base: 28,  bulkAt: 6,   bulk: 22  },
+  tote:    { name: 'Tote Bag',          base: 18,  bulkAt: 6,   bulk: 14  },
+  mug:     { name: 'Mug / Drinkware',  base: 20,  bulkAt: 6,   bulk: 16  },
+  jacket:  { name: 'Jacket',            base: 75,  bulkAt: 6,   bulk: 65  },
+  pin:     { name: 'Enamel Pin',        base: 12,  bulkAt: 26,  bulk: 9   },
+  other:   { name: 'Custom Item',       base: null, bulkAt: null, bulk: null },
+};
+
+// Mid-point qty for each range bracket
+const QTY_MID = { '1': 3, '6': 15, '26': 60, '100': 120 };
+const QTY_LABELS = { '1': '1–5', '6': '6–25', '26': '26–100', '100': '100+' };
+
+// ── Cash App cashtag — REPLACE WITH THE CLIENT'S ACTUAL $CASHTAG ──
+const CASHTAG = '$DehSigns';
+
+let currentTotal = 0;
+let cashAppOpened = false;
+let paymentConfirmed = false;
+
+function updateEstimate() {
+  const productKey = document.getElementById('req-product').value;
+  const qtyKey     = document.getElementById('req-qty').value;
+  const estimator  = document.getElementById('price-estimator');
+  const payStep1   = document.getElementById('pay-step-1');
+  const submitRow  = document.getElementById('submit-row');
+
+  if (!productKey || !qtyKey) {
+    estimator.style.display = 'none';
+    payStep1.style.display  = 'none';
+    submitRow.style.display = 'none';
+    return;
+  }
+
+  const p   = PRICES[productKey];
+  const qty = QTY_MID[qtyKey];
+  const qtyLabel = QTY_LABELS[qtyKey];
+
+  estimator.style.display = 'block';
+
+  if (!p || p.base === null) {
+    // "Other" — no estimate, skip to direct quote
+    document.getElementById('price-display').textContent = 'Quote on request';
+    document.getElementById('price-breakdown').innerHTML =
+      `<span>We'll send you a custom quote after reviewing your project.</span>`;
+    currentTotal = 0;
+    payStep1.style.display  = 'none';
+    submitRow.style.display = 'block';
+    document.getElementById('btn-submit').disabled = false;
+    document.getElementById('submit-note').textContent = 'Submit your request and we\'ll send a quote.';
+    return;
+  }
+
+  const unitPrice = qty >= p.bulkAt ? p.bulk : p.base;
+  const total     = unitPrice * qty;
+  currentTotal    = total;
+
+  const isBulk = qty >= p.bulkAt;
+  document.getElementById('price-display').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('price-breakdown').innerHTML =
+    `<span>${qtyLabel} × ${p.name} @ $${unitPrice.toFixed(2)}/ea${isBulk ? ' <strong style="color:var(--pink)">bulk rate</strong>' : ''}</span>` +
+    (isBulk ? `<span style="color:#00a035;">Bulk discount applied ✓</span>` : '');
+
+  // Update Pay Now button amount
+  document.getElementById('pay-btn-amount').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('confirm-amount').textContent = `$${total.toFixed(2)}`;
+
+  payStep1.style.display  = 'block';
+  submitRow.style.display = 'block';
+
+  // Reset payment state if product/qty changed
+  if (!paymentConfirmed) {
+    cashAppOpened = false;
+    document.getElementById('pay-step-2').classList.remove('active');
+    document.getElementById('btn-submit').disabled = true;
+    document.getElementById('submit-note').textContent = 'Send your Cash App payment above to unlock.';
+  }
+}
+
+function openCashApp() {
+  if (currentTotal <= 0) return;
+
+  // Cash App deep link: cashtag + amount prefilled
+  const amount = currentTotal.toFixed(2);
+  const note   = encodeURIComponent('Deh Signs custom merch order');
+  const cashtag = CASHTAG.replace('$', '');
+  // Try deep link first (mobile), fallback to web
+  const deepLink = `cashapp://cash.app/pay/${cashtag}?amount=${amount}&note=${note}`;
+  const webLink  = `https://cash.app/$${cashtag}/${amount}`;
+
+  // Open deep link attempt, fall back to web after short delay
+  const win = window.open(deepLink, '_blank');
+  setTimeout(() => {
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+      window.open(webLink, '_blank');
+    }
+  }, 1500);
+
+  cashAppOpened = true;
+
+  // Show confirm step
+  document.getElementById('pay-step-2').classList.add('active');
+  showToast(`Cash App opened for $${amount}. Come back and confirm after you send.`);
+}
+
+function reopenCashApp() {
+  openCashApp();
+}
+
+function confirmPayment() {
+  if (!cashAppOpened) {
+    showToast('Please tap "Pay Now via Cash App" first to open the payment.');
+    return;
+  }
+  paymentConfirmed = true;
+  document.getElementById('pay-step-2').classList.remove('active');
+  document.getElementById('btn-submit').disabled = false;
+  document.getElementById('submit-note').textContent = 'Payment confirmed. Submit to send your order.';
+  showToast('Payment confirmed! Fill out the rest and submit.');
+}
+
 /* ── CONTACT FORM ─────────────────────────────────────────────────────────── */
 let uploadedFiles = [];
 
@@ -734,7 +951,7 @@ function submitRequest() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email.'); return; }
   document.getElementById('contact-form-body').style.display = 'none';
   document.getElementById('form-success').classList.add('show');
-  showToast("Request sent! We'll be in touch.");
+  showToast("Order submitted! We'll be in touch.");
 }
 
 function resetForm() {
@@ -743,6 +960,12 @@ function resetForm() {
   ['req-name','req-email','req-desc'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('req-product').value = '';
   document.getElementById('req-qty').value = '';
+  document.getElementById('price-estimator').style.display = 'none';
+  document.getElementById('pay-step-1').style.display = 'none';
+  document.getElementById('pay-step-2').classList.remove('active');
+  document.getElementById('submit-row').style.display = 'none';
+  document.getElementById('btn-submit').disabled = true;
+  currentTotal = 0; cashAppOpened = false; paymentConfirmed = false;
   uploadedFiles = []; renderPreviews();
 }
 
