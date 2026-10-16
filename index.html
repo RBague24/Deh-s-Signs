@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Deh' Signs — Custom Merch</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init('TLPacMVcuw8qcsLxH');</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -249,6 +251,71 @@
     .upload-thumb-wrap { position:relative; }
     .upload-thumb { width:58px; height:58px; border-radius:8px; object-fit:cover; border:2px solid var(--blush); }
     .upload-remove { position:absolute; top:-5px; right:-5px; width:16px; height:16px; background:var(--pink); color:white; border:none; border-radius:50%; font-size:.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    /* ── MOCKUP VISUALIZER ── */
+    .mockup-visualizer {
+      background: linear-gradient(135deg, rgba(26,58,107,.05), rgba(232,65,122,.04));
+      border: 1.5px solid rgba(74,144,217,.2);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .mockup-header { margin-bottom: .85rem; }
+    .mockup-label { font-size: .75rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--navy); display: block; margin-bottom: .15rem; }
+    .mockup-sub { font-size: .77rem; color: var(--muted); }
+    .mockup-tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .mockup-tab {
+      padding: .38rem .9rem; border-radius: 50px; border: 1.5px solid rgba(74,144,217,.3);
+      background: transparent; font-family: 'DM Sans', sans-serif; font-size: .78rem;
+      font-weight: 600; color: var(--navy); cursor: pointer; transition: all .2s;
+    }
+    .mockup-tab:hover { border-color: var(--pink); color: var(--pink); }
+    .mockup-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+    .mockup-canvas-wrap { display: flex; flex-direction: column; align-items: center; gap: .85rem; }
+    .mockup-canvas {
+      position: relative; width: 260px; height: 280px;
+      border-radius: 12px; overflow: hidden;
+      background: rgba(255,255,255,.6); border: 1px solid rgba(74,144,217,.15);
+      box-shadow: 0 4px 20px rgba(26,58,107,.09);
+      flex-shrink: 0;
+    }
+    #mockup-svg-host { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #mockup-svg-host svg { width: 100%; height: 100%; }
+    #mockup-overlays { position: absolute; inset: 0; pointer-events: none; }
+    .design-overlay {
+      position: absolute; pointer-events: auto; cursor: move;
+      border: 2px dashed rgba(232,65,122,.55); border-radius: 4px;
+      overflow: hidden; transition: box-shadow .2s;
+    }
+    .design-overlay:hover { box-shadow: 0 0 0 3px rgba(232,65,122,.25); }
+    .design-overlay img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .zone-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--navy); margin-bottom: .5rem; }
+    .zone-btns { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: center; }
+    .zone-btn {
+      padding: .32rem .8rem; border-radius: 50px;
+      border: 1.5px solid rgba(74,144,217,.3); background: white;
+      font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 600;
+      color: var(--navy); cursor: pointer; transition: all .2s;
+    }
+    .zone-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .zone-btn.has-design { border-color: #00a035; color: #00a035; background: rgba(0,160,53,.06); }
+    .zone-btn.has-design::after { content: ' ✓'; }
+    .zone-btn.uploading { border-color: var(--blue); color: var(--blue); opacity: .7; }
+    .placed-designs { width: 100%; }
+    .placed-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .placed-item {
+      display: flex; align-items: center; gap: .45rem;
+      background: white; border: 1.5px solid rgba(0,160,53,.3);
+      border-radius: 10px; padding: .3rem .55rem .3rem .3rem;
+      font-size: .72rem; font-weight: 600; color: #00a035;
+    }
+    .placed-item img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+    .placed-item-info { display: flex; flex-direction: column; gap: .1rem; }
+    .placed-item-name { font-size: .7rem; color: var(--navy); font-weight: 700; line-height: 1.2; }
+    .placed-item-panel { font-size: .65rem; color: var(--muted); font-weight: 500; }
+    .placed-remove { background: none; border: none; color: #c93268; cursor: pointer; font-size: .8rem; font-weight: 800; line-height: 1; padding: 0 0 0 .25rem; margin-left: auto; flex-shrink: 0; transition: color .15s; }
+    .placed-remove:hover { color: var(--pink); }
+    .mockup-note { font-size: .7rem; color: var(--muted); margin-top: .85rem; text-align: center; font-style: italic; }
+
     /* ── PRICE ESTIMATOR ── */
     .price-estimator {
       background:linear-gradient(135deg,rgba(26,58,107,.06),rgba(232,65,122,.06));
@@ -295,7 +362,10 @@
     .form-submit-row { display:flex; align-items:center; gap:1rem; margin-top:1.25rem; flex-wrap:wrap; }
     .btn-submit { background:linear-gradient(135deg,var(--pink),#c93268); color:var(--white); border:none; padding:.88rem 2.25rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:.95rem; cursor:pointer; transition:opacity .2s,transform .2s,box-shadow .2s; }
     .btn-submit:hover:not(:disabled) { opacity:.9; transform:translateY(-2px); box-shadow:0 8px 22px rgba(232,65,122,.32); }
-    .btn-submit:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+    .btn-submit:disabled { opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; filter:grayscale(30%); }
+    .btn-pay-now:disabled { opacity:.35; cursor:not-allowed; filter:grayscale(30%); }
+    .pay-now-row.locked .btn-pay-now { opacity:.35; cursor:not-allowed; pointer-events:none; filter:grayscale(30%); }
+    .pay-now-row.locked p { opacity:.45; }
     .form-note { font-size:.75rem; color:var(--muted); }
     .form-success { display:none; text-align:center; padding:2rem 1rem; }
     .form-success.show { display:block; }
@@ -643,6 +713,46 @@
             </div>
           </div>
 
+          <!-- ── MOCKUP VISUALIZER ── -->
+          <div class="mockup-visualizer" id="mockup-visualizer" style="display:none;">
+            <div class="mockup-header">
+              <span class="mockup-label">👕 Design Preview</span>
+              <span class="mockup-sub">Add your logo or design to see how it looks</span>
+            </div>
+
+            <!-- 4 panel tabs -->
+            <div class="mockup-tabs" id="mockup-tabs">
+              <button class="mockup-tab active" data-panel="front"      onclick="switchPanel('front')">Front</button>
+              <button class="mockup-tab"         data-panel="back"       onclick="switchPanel('back')">Back</button>
+              <button class="mockup-tab"         data-panel="left-sleeve" onclick="switchPanel('left-sleeve')">Left Sleeve</button>
+              <button class="mockup-tab"         data-panel="right-sleeve" onclick="switchPanel('right-sleeve')">Right Sleeve</button>
+            </div>
+
+            <!-- Canvas area -->
+            <div class="mockup-canvas-wrap">
+              <div class="mockup-canvas" id="mockup-canvas">
+                <!-- SVG shirt injected by JS -->
+                <div id="mockup-svg-host"></div>
+                <!-- Placed design overlays -->
+                <div id="mockup-overlays"></div>
+              </div>
+
+              <!-- Zone picker — each zone gets its own hidden file input -->
+              <div class="mockup-zones" id="mockup-zones">
+                <p class="zone-label">Tap a zone to add your design image:</p>
+                <div class="zone-btns" id="zone-btns"></div>
+              </div>
+
+              <!-- Placed designs strip (shows thumbnails per zone) -->
+              <div class="placed-designs" id="placed-designs" style="display:none;">
+                <p class="zone-label" style="margin-bottom:.4rem;">Placed designs:</p>
+                <div class="placed-list" id="placed-list"></div>
+              </div>
+            </div>
+
+            <p class="mockup-note">This is a rough visual preview — not a final proof. We'll send you an exact mockup after you submit.</p>
+          </div>
+
           <!-- PRICE ESTIMATOR -->
           <div class="price-estimator" id="price-estimator" style="display:none;">
             <div class="price-estimator-header">
@@ -660,17 +770,17 @@
             </div>
           </div>
           <div class="rfield" style="margin-bottom:.9rem;">
-            <label>Upload Reference Images <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+            <label>Reference Images <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
             <div class="upload-zone" id="upload-zone">
               <input type="file" id="req-files" accept="image/*" multiple onchange="handleFiles(this.files)" />
               <div class="upload-main">Drag & drop images here, or click to browse</div>
-              <div class="upload-sub">PNG, JPG up to 10MB · Max 5 files</div>
+              <div class="upload-sub">PNG, JPG up to 10MB · Max 5 files · We'll ask you to send these via email after you submit</div>
               <div class="upload-preview" id="upload-preview"></div>
             </div>
           </div>
 
-          <!-- STEP 1: Pay Now button (shown once product + qty selected) -->
-          <div class="pay-now-row" id="pay-step-1" style="display:none;">
+          <!-- STEP 1: Pay Now button (visible but locked until product + qty selected) -->
+          <div class="pay-now-row locked" id="pay-step-1">
             <button class="btn-pay-now" id="btn-pay-now" onclick="openCashApp()">
               <svg class="cashapp-icon" viewBox="0 0 24 24" fill="none">
                 <rect width="24" height="24" rx="6" fill="#00C244"/>
@@ -695,8 +805,8 @@
             </div>
           </div>
 
-          <!-- STEP 3: Submit (only enabled after payment confirmed) -->
-          <div class="form-submit-row" id="submit-row" style="display:none;">
+          <!-- STEP 3: Submit (visible but locked until payment confirmed) -->
+          <div class="form-submit-row" id="submit-row">
             <button class="btn-submit" id="btn-submit" onclick="submitRequest()" disabled>Submit My Order</button>
             <span class="form-note" id="submit-note">Confirm your Cash App payment above to unlock.</span>
           </div>
@@ -706,7 +816,8 @@
             <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h4>Order Received!</h4>
-          <p>Payment confirmed. We'll review your order and reach out within 1 business day to get everything started.</p>
+          <p>We got your order! We'll reach out within 1 business day to get everything started.</p>
+          <p id="success-image-note" style="margin-top:.6rem;font-size:.85rem;color:var(--muted);display:none;">📎 Don't forget to reply to your confirmation email with your reference images.</p>
           <button class="btn-primary" style="margin-top:1.25rem;" onclick="resetForm()">Place Another Order</button>
         </div>
       </div>
@@ -772,7 +883,7 @@
     <div class="footer-links">
       <h4>Contact</h4>
       <a href="#contact">Send a Request</a>
-      <a href="mailto:rbague437@gmail.com">hello@dehsigns.com</a>
+      <a href="mailto:hello@dehsigns.com">hello@dehsigns.com</a>
     </div>
     <div class="footer-links">
       <h4>Follow Us</h4>
@@ -818,17 +929,237 @@ let currentTotal = 0;
 let cashAppOpened = false;
 let paymentConfirmed = false;
 
+/* ══════════════════════════════════════════════════════════
+   MOCKUP VISUALIZER
+══════════════════════════════════════════════════════════ */
+
+// SVG definitions for each panel view
+const SHIRT_SVGS = {
+  front: `<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Body -->
+    <path d="M72,42 L30,70 L42,110 L68,98 L68,240 L192,240 L192,98 L218,110 L230,70 L188,42 C184,56 168,66 150,68 L148,70 C144,76 136,80 130,80 C124,80 116,76 112,70 L110,68 C92,66 76,56 72,42 Z"
+          fill="#2a2a2a" stroke="#444" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Collar -->
+    <path d="M110,68 C116,76 124,80 130,80 C136,80 144,76 148,70 L150,68" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+    <!-- Left sleeve seam -->
+    <line x1="68" y1="98" x2="68" y2="150" stroke="#3a3a3a" stroke-width="1"/>
+    <!-- Right sleeve seam -->
+    <line x1="192" y1="98" x2="192" y2="150" stroke="#3a3a3a" stroke-width="1"/>
+    <!-- Bottom hem -->
+    <line x1="68" y1="238" x2="192" y2="238" stroke="#3a3a3a" stroke-width="1.5"/>
+  </svg>`,
+
+  back: `<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+    <path d="M72,42 L30,70 L42,110 L68,98 L68,240 L192,240 L192,98 L218,110 L230,70 L188,42 C184,56 168,66 150,68 L148,70 C144,64 136,60 130,60 C124,60 116,64 112,70 L110,68 C92,66 76,56 72,42 Z"
+          fill="#2a2a2a" stroke="#444" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Back collar -->
+    <path d="M110,68 C116,64 124,60 130,60 C136,60 144,64 148,70" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+    <line x1="68" y1="98" x2="68" y2="150" stroke="#3a3a3a" stroke-width="1"/>
+    <line x1="192" y1="98" x2="192" y2="150" stroke="#3a3a3a" stroke-width="1"/>
+    <line x1="68" y1="238" x2="192" y2="238" stroke="#3a3a3a" stroke-width="1.5"/>
+  </svg>`,
+
+  'left-sleeve': `<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Full shirt faded -->
+    <path d="M72,42 L30,70 L42,110 L68,98 L68,240 L192,240 L192,98 L218,110 L230,70 L188,42 C184,56 168,66 150,68 L148,70 C144,76 136,80 130,80 C124,80 116,76 112,70 L110,68 C92,66 76,56 72,42 Z"
+          fill="#1e1e1e" stroke="#333" stroke-width="1.5" stroke-linejoin="round" opacity=".55"/>
+    <!-- Left sleeve highlighted -->
+    <path d="M72,42 L30,70 L42,110 L68,98 L68,58 Z" fill="#2a2a2a" stroke="#555" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Cuff -->
+    <path d="M30,68 L42,108" stroke="#666" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Label -->
+    <text x="38" y="90" font-family="DM Sans,sans-serif" font-size="8" fill="#aaa" text-anchor="middle" transform="rotate(-60,38,90)">Left Sleeve</text>
+  </svg>`,
+
+  'right-sleeve': `<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Full shirt faded -->
+    <path d="M72,42 L30,70 L42,110 L68,98 L68,240 L192,240 L192,98 L218,110 L230,70 L188,42 C184,56 168,66 150,68 L148,70 C144,76 136,80 130,80 C124,80 116,76 112,70 L110,68 C92,66 76,56 72,42 Z"
+          fill="#1e1e1e" stroke="#333" stroke-width="1.5" stroke-linejoin="round" opacity=".55"/>
+    <!-- Right sleeve highlighted -->
+    <path d="M188,42 L230,70 L218,110 L192,98 L192,58 Z" fill="#2a2a2a" stroke="#555" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M230,68 L218,108" stroke="#666" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="222" y="90" font-family="DM Sans,sans-serif" font-size="8" fill="#aaa" text-anchor="middle" transform="rotate(60,222,90)">Right Sleeve</text>
+  </svg>`,
+};
+
+// Placement zones per panel — {id, label, x, y, w, h} in % of canvas (260x280)
+const PANEL_ZONES = {
+  front: [
+    { id:'chest-left',   label:'Chest Left',   x:32, y:32, w:22, h:22 },
+    { id:'chest-right',  label:'Chest Right',  x:50, y:32, w:22, h:22 },
+    { id:'center',       label:'Center Front',  x:32, y:32, w:38, h:40 },
+    { id:'bottom-left',  label:'Bottom Left',   x:30, y:68, w:20, h:18 },
+    { id:'bottom-right', label:'Bottom Right',  x:52, y:68, w:20, h:18 },
+  ],
+  back: [
+    { id:'back-top',     label:'Back Top',      x:30, y:28, w:40, h:22 },
+    { id:'back-center',  label:'Back Center',   x:28, y:32, w:44, h:44 },
+    { id:'back-bottom',  label:'Back Bottom',   x:30, y:72, w:40, h:16 },
+  ],
+  'left-sleeve': [
+    { id:'ls-upper',     label:'Upper Sleeve',  x:12, y:22, w:28, h:28 },
+    { id:'ls-lower',     label:'Lower Sleeve',  x:10, y:52, w:26, h:22 },
+  ],
+  'right-sleeve': [
+    { id:'rs-upper',     label:'Upper Sleeve',  x:60, y:22, w:28, h:28 },
+    { id:'rs-lower',     label:'Lower Sleeve',  x:62, y:52, w:26, h:22 },
+  ],
+};
+
+// State
+let activePanel   = 'front';
+// { panelId: { zoneId: imageDataURL } }
+const designState = {};
+
+let mockupInitialized = false;
+
+function initMockup() {
+  if (!mockupInitialized) {
+    mockupInitialized = true;
+    switchPanel('front');
+  }
+}
+
+function switchPanel(panel) {
+  activePanel = panel;
+  document.querySelectorAll('.mockup-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.panel === panel));
+  document.getElementById('mockup-svg-host').innerHTML = SHIRT_SVGS[panel] || SHIRT_SVGS.front;
+  renderZoneButtons(panel);
+  renderOverlays(panel);
+  renderPlacedStrip();
+}
+
+function renderZoneButtons(panel) {
+  const zones    = PANEL_ZONES[panel] || [];
+  const panelMap = designState[panel] || {};
+  // Each zone gets its own hidden <input type=file> so they're independent
+  document.getElementById('zone-btns').innerHTML = zones.map(z => {
+    const has = !!panelMap[z.id];
+    return `
+      <label class="zone-btn${has ? ' has-design' : ''}" title="${has ? 'Replace image' : 'Add image to ' + z.label}">
+        ${z.label}
+        <input type="file" accept="image/*" style="display:none;"
+               onchange="handleZoneFile(this, '${panel}', '${z.id}')" />
+      </label>`;
+  }).join('');
+}
+
+function handleZoneFile(input, panel, zoneId) {
+  if (!input.files || !input.files[0]) return;
+  // Mark button as uploading
+  const label = input.closest('label');
+  if (label) label.classList.add('uploading');
+
+  const file   = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    if (!designState[panel]) designState[panel] = {};
+    designState[panel][zoneId] = e.target.result;
+    // If we're on this panel right now, refresh everything
+    if (panel === activePanel) {
+      renderZoneButtons(panel);
+      renderOverlays(panel);
+    }
+    renderPlacedStrip();
+    input.value = ''; // reset so same file can be re-selected
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderOverlays(panel) {
+  const zones    = PANEL_ZONES[panel] || [];
+  const panelMap = designState[panel] || {};
+  document.getElementById('mockup-overlays').innerHTML = zones
+    .filter(z => panelMap[z.id])
+    .map(z => `
+      <div class="design-overlay" data-zone="${z.id}"
+           style="left:${z.x}%;top:${z.y}%;width:${z.w}%;height:${z.h}%;">
+        <img src="${panelMap[z.id]}" alt="${z.label}" />
+      </div>`)
+    .join('');
+}
+
+function renderPlacedStrip() {
+  const stripEl = document.getElementById('placed-designs');
+  const listEl  = document.getElementById('placed-list');
+  const items   = [];
+
+  for (const panel in designState) {
+    const zones    = PANEL_ZONES[panel] || [];
+    const panelMap = designState[panel];
+    zones.forEach(z => {
+      if (panelMap[z.id]) {
+        const panelLabel = panel === 'left-sleeve' ? 'Left Sleeve'
+                         : panel === 'right-sleeve' ? 'Right Sleeve'
+                         : panel.charAt(0).toUpperCase() + panel.slice(1);
+        items.push({ panel, zoneId: z.id, label: z.label, panelLabel, src: panelMap[z.id] });
+      }
+    });
+  }
+
+  if (items.length === 0) {
+    stripEl.style.display = 'none';
+    return;
+  }
+
+  stripEl.style.display = 'block';
+  listEl.innerHTML = items.map(item => `
+    <div class="placed-item">
+      <img src="${item.src}" alt="${item.label}" />
+      <div class="placed-item-info">
+        <span class="placed-item-name">${item.label}</span>
+        <span class="placed-item-panel">${item.panelLabel}</span>
+      </div>
+      <button class="placed-remove" onclick="removeZoneDesign('${item.panel}','${item.zoneId}')" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+function removeZoneDesign(panel, zoneId) {
+  if (designState[panel]) {
+    delete designState[panel][zoneId];
+    if (Object.keys(designState[panel]).length === 0) delete designState[panel];
+  }
+  if (panel === activePanel) {
+    renderZoneButtons(panel);
+    renderOverlays(panel);
+  }
+  renderPlacedStrip();
+}
+
+function getMockupSummary() {
+  const lines = [];
+  for (const panel in designState) {
+    const zones = PANEL_ZONES[panel] || [];
+    const pm    = designState[panel];
+    const used  = zones.filter(z => pm[z.id]).map(z => z.label);
+    if (used.length) lines.push(`${panel}: ${used.join(', ')}`);
+  }
+  return lines.length ? lines.join(' | ') : 'None';
+}
+
 function updateEstimate() {
   const productKey = document.getElementById('req-product').value;
   const qtyKey     = document.getElementById('req-qty').value;
   const estimator  = document.getElementById('price-estimator');
   const payStep1   = document.getElementById('pay-step-1');
-  const submitRow  = document.getElementById('submit-row');
+
+  // Show/hide mockup visualizer for wearable items
+  const mockupEl = document.getElementById('mockup-visualizer');
+  const wearables = ['tshirt','hoodie','jacket'];
+  if (productKey && wearables.includes(productKey)) {
+    mockupEl.style.display = 'block';
+    initMockup();
+  } else {
+    mockupEl.style.display = 'none';
+  }
 
   if (!productKey || !qtyKey) {
     estimator.style.display = 'none';
-    payStep1.style.display  = 'none';
-    submitRow.style.display = 'none';
+    // Keep buttons visible but locked
+    payStep1.classList.add('locked');
+    document.getElementById('btn-submit').disabled = true;
+    document.getElementById('submit-note').textContent = 'Select a product and quantity to unlock.';
     return;
   }
 
@@ -844,8 +1175,7 @@ function updateEstimate() {
     document.getElementById('price-breakdown').innerHTML =
       `<span>We'll send you a custom quote after reviewing your project.</span>`;
     currentTotal = 0;
-    payStep1.style.display  = 'none';
-    submitRow.style.display = 'block';
+    payStep1.classList.add('locked'); // hide Cash App for "other"
     document.getElementById('btn-submit').disabled = false;
     document.getElementById('submit-note').textContent = 'Submit your request and we\'ll send a quote.';
     return;
@@ -865,8 +1195,8 @@ function updateEstimate() {
   document.getElementById('pay-btn-amount').textContent = `$${total.toFixed(2)}`;
   document.getElementById('confirm-amount').textContent = `$${total.toFixed(2)}`;
 
-  payStep1.style.display  = 'block';
-  submitRow.style.display = 'block';
+  // Unlock Pay Now
+  payStep1.classList.remove('locked');
 
   // Reset payment state if product/qty changed
   if (!paymentConfirmed) {
@@ -953,44 +1283,56 @@ function submitRequest() {
   if (!name || !email || !product || !desc) { showToast('Please fill in all required fields.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email.'); return; }
 
-  const productName = PRICES[product] ? PRICES[product].name : 'Custom Item';
-  const qtyLabel    = qty ? `${qty} piece${parseInt(qty) !== 1 ? 's' : ''}` : 'N/A';
-  const totalLabel  = currentTotal > 0 ? `$${currentTotal.toFixed(2)}` : 'Quote on request';
-  const payStatus   = paymentConfirmed ? 'YES — client confirmed Cash App payment sent' : 'Quote only (no payment required)';
+  const productName  = PRICES[product] ? PRICES[product].name : 'Custom Item';
+  const qtyLabel     = qty ? `${qty} piece${parseInt(qty) !== 1 ? 's' : ''}` : 'N/A';
+  const totalLabel   = currentTotal > 0 ? `$${currentTotal.toFixed(2)}` : 'Quote on request';
+  const payStatus    = paymentConfirmed ? 'YES — client confirmed Cash App payment sent' : 'Quote only (no payment required)';
+  const imageNote    = uploadedFiles.length > 0
+    ? `${uploadedFiles.length} file(s) noted: ${uploadedFiles.map(f => f.name).join(', ')} — client will send via email reply`
+    : 'None';
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.textContent = 'Sending…';
 
-  const formData = new FormData();
-  formData.append('_subject',         `New Merch Order from ${name}`);
-  formData.append('_template',        'table');
-  formData.append('_captcha',         'false');
-  formData.append('Name',             name);
-  formData.append('Email',            email);
-  formData.append('Product Type',     productName);
-  formData.append('Quantity',         qtyLabel);
-  formData.append('Estimated Total',  totalLabel);
-  formData.append('Cash App Paid',    payStatus);
-  formData.append('Project Details',  desc);
-
-  // ── REPLACE hello@dehsigns.com WITH THE CLIENT'S REAL EMAIL ──
-  fetch('https://formsubmit.co/ajax/rbague437@gmail.com', {
-    method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success === 'true' || data.success === true) {
-      document.getElementById('contact-form-body').style.display = 'none';
-      document.getElementById('form-success').classList.add('show');
-      showToast("Order submitted! We'll be in touch.");
-    } else {
-      throw new Error('FormSubmit returned failure');
+  // Pull base64 images from designState per panel (empty string if none placed)
+  function getPanelImage(panelId) {
+    const pm = designState[panelId];
+    if (!pm) return '';
+    const zones = PANEL_ZONES[panelId] || [];
+    for (const z of zones) {
+      if (pm[z.id]) return pm[z.id]; // return first placed image for that panel
     }
+    return '';
+  }
+
+  const templateParams = {
+    from_name:       name,
+    from_email:      email,
+    product:         productName,
+    quantity:        qtyLabel,
+    total:           totalLabel,
+    payment_status:  payStatus,
+    placements:      getMockupSummary() || 'No mockup placements',
+    message:         desc,
+    image_note:      imageNote,
+    design_front:        getPanelImage('front'),
+    design_back:         getPanelImage('back'),
+    design_left_sleeve:  getPanelImage('left-sleeve'),
+    design_right_sleeve: getPanelImage('right-sleeve'),
+  };
+
+  emailjs.send('service_fjztynk', 'template_xzwl7u8', templateParams)
+  .then(() => {
+    document.getElementById('contact-form-body').style.display = 'none';
+    document.getElementById('form-success').classList.add('show');
+    if (uploadedFiles.length > 0) {
+      document.getElementById('success-image-note').style.display = 'block';
+    }
+    showToast("Order submitted! We'll be in touch.");
   })
-  .catch(() => {
+  .catch(err => {
+    console.error('EmailJS error:', err);
     btn.disabled = false;
     btn.textContent = 'Submit My Order';
     showToast('Something went wrong. Please try again or email us directly.');
@@ -1004,12 +1346,18 @@ function resetForm() {
   document.getElementById('req-product').value = '';
   document.getElementById('req-qty').value = '';
   document.getElementById('price-estimator').style.display = 'none';
-  document.getElementById('pay-step-1').style.display = 'none';
+  document.getElementById('pay-step-1').classList.add('locked');
   document.getElementById('pay-step-2').classList.remove('active');
-  document.getElementById('submit-row').style.display = 'none';
   document.getElementById('btn-submit').disabled = true;
+  document.getElementById('submit-note').textContent = 'Select a product and quantity to unlock.';
   currentTotal = 0; cashAppOpened = false; paymentConfirmed = false;
   uploadedFiles = []; renderPreviews();
+  // Reset mockup
+  for (const k in designState) delete designState[k];
+  mockupInitialized = false;
+  document.getElementById('mockup-visualizer').style.display = 'none';
+  document.getElementById('placed-designs').style.display = 'none';
+  document.querySelectorAll('.mockup-tab').forEach((t,i) => t.classList.toggle('active', i===0));
 }
 
 /* ── 3D NOTIFY ────────────────────────────────────────────────────────────── */
