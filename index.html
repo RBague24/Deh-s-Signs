@@ -1045,24 +1045,42 @@ function renderZoneButtons(panel) {
   }).join('');
 }
 
+function compressImage(dataURL, maxDim, quality) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else        { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataURL;
+  });
+}
+
 function handleZoneFile(input, panel, zoneId) {
   if (!input.files || !input.files[0]) return;
-  // Mark button as uploading
   const label = input.closest('label');
   if (label) label.classList.add('uploading');
 
   const file   = input.files[0];
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = async e => {
+    // Compress to max 400×400px at 50% quality — keeps each image well under EmailJS's 50KB limit
+    const compressed = await compressImage(e.target.result, 400, 0.5);
     if (!designState[panel]) designState[panel] = {};
-    designState[panel][zoneId] = e.target.result;
-    // If we're on this panel right now, refresh everything
+    designState[panel][zoneId] = compressed;
     if (panel === activePanel) {
       renderZoneButtons(panel);
       renderOverlays(panel);
     }
     renderPlacedStrip();
-    input.value = ''; // reset so same file can be re-selected
+    input.value = '';
   };
   reader.readAsDataURL(file);
 }
@@ -1274,7 +1292,7 @@ uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('dra
 uz.addEventListener('dragleave', () => uz.classList.remove('drag-over'));
 uz.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
 
-function submitRequest() {
+async function submitRequest() {
   const name    = document.getElementById('req-name').value.trim();
   const email   = document.getElementById('req-email').value.trim();
   const product = document.getElementById('req-product').value;
@@ -1301,10 +1319,25 @@ function submitRequest() {
     if (!pm) return '';
     const zones = PANEL_ZONES[panelId] || [];
     for (const z of zones) {
-      if (pm[z.id]) return pm[z.id]; // return first placed image for that panel
+      if (pm[z.id]) return pm[z.id];
     }
     return '';
   }
+
+  // Re-compress each panel image to 300px / 40% quality before sending
+  // so all 4 panels together stay well under EmailJS's 50KB total limit
+  async function getCompressedPanelImage(panelId) {
+    const raw = getPanelImage(panelId);
+    if (!raw) return '';
+    return await compressImage(raw, 300, 0.4);
+  }
+
+  const [imgFront, imgBack, imgLeft, imgRight] = await Promise.all([
+    getCompressedPanelImage('front'),
+    getCompressedPanelImage('back'),
+    getCompressedPanelImage('left-sleeve'),
+    getCompressedPanelImage('right-sleeve'),
+  ]);
 
   const templateParams = {
     from_name:       name,
@@ -1316,10 +1349,10 @@ function submitRequest() {
     placements:      getMockupSummary() || 'No mockup placements',
     message:         desc,
     image_note:      imageNote,
-    design_front:        getPanelImage('front'),
-    design_back:         getPanelImage('back'),
-    design_left_sleeve:  getPanelImage('left-sleeve'),
-    design_right_sleeve: getPanelImage('right-sleeve'),
+    design_front:        imgFront,
+    design_back:         imgBack,
+    design_left_sleeve:  imgLeft,
+    design_right_sleeve: imgRight,
   };
 
   emailjs.send('service_fjztynk', 'template_xzwl7u8', templateParams)
